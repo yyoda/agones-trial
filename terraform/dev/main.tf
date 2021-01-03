@@ -42,8 +42,8 @@ module eks_cluster {
   source          = "git::github.com/terraform-aws-modules/terraform-aws-eks.git?ref=v12.2.0"
   cluster_name    = "${local.env}-${local.namespace}"
   subnets         = [for subnet in module.network.subnets.public : subnet.id]
-  vpc_id          = module.network.vpc.id
   cluster_version = "1.17"
+  vpc_id          = module.network.vpc.id
 
   worker_groups_launch_template = concat(
     [
