@@ -38,7 +38,7 @@ module network {
   tags = local.tags
 }
 
-module eks_cluster {
+module eks {
   source          = "git::github.com/terraform-aws-modules/terraform-aws-eks.git?ref=v12.2.0"
   cluster_name    = "${local.env}-${local.namespace}"
   subnets         = [for subnet in module.network.subnets.public : subnet.id]
@@ -77,9 +77,9 @@ provider "helm" {
   version = "~> 1.2"
   kubernetes {
     load_config_file       = false
-    host                   = module.eks_cluster.cluster_endpoint
+    host                   = module.eks.cluster_endpoint
     token                  = data.aws_eks_cluster_auth.default.token
-    cluster_ca_certificate = base64decode(module.eks_cluster.cluster_certificate_authority_data)
+    cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
   }
 }
 
