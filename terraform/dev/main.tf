@@ -45,44 +45,54 @@ module eks {
   cluster_version = "1.17"
   vpc_id          = module.network.vpc.id
 
-  worker_groups_launch_template = concat(
-    [
-      {
-        name                          = "default"
-        instance_type                 = "t2.micro"
-        asg_desired_capacity          = 4
-        asg_min_size                  = 4
-        asg_max_size                  = 4
-        additional_security_group_ids = [module.network.security_groups.eks.worker_group_mgmt_one.id]
-        public_ip                     = true
-      }
-    ],
-    [
-      for name in toset(["agones-system", "agones-metrics"]) :
-      {
-        name                 = name
-        instance_type        = "t2.micro"
-        asg_desired_capacity = 1
-        kubelet_extra_args   = "--node-labels=agones.dev/agones-system=true --register-with-taints=agones.dev/agones-system=true:NoExecute"
-        public_ip            = true
-      }
-  ])
+  worker_groups_launch_template = [
+    {
+      name                          = "default"
+      instance_type                 = "t2.micro"
+      asg_desired_capacity          = 2
+      asg_min_size                  = 2
+      asg_max_size                  = 2
+      additional_security_group_ids = [module.network.security_groups.eks.worker_group_mgmt_one.id]
+      public_ip                     = true
+    },
+    {
+      name                 = "agones-system"
+      instance_type        = "t2.micro"
+      asg_desired_capacity = 1
+      kubelet_extra_args   = "--node-labels=agones.dev/agones-system=true --register-with-taints=agones.dev/agones-system=true:NoExecute"
+      public_ip            = true
+    },
+    {
+      name                 = "agones-metrics"
+      instance_type        = "t2.micro"
+      asg_desired_capacity = 1
+      kubelet_extra_args   = "--node-labels=agones.dev/agones-metrics=true --register-with-taints=agones.dev/agones-metrics=true:NoExecute"
+      public_ip            = true
+    }
+  ]
 }
 
 data aws_eks_cluster_auth default {
   name = "${local.env}-${local.namespace}"
 }
 
-provider "helm" {
-  version = "~> 1.2"
-  kubernetes {
-    load_config_file       = false
-    host                   = module.eks.cluster_endpoint
-    token                  = data.aws_eks_cluster_auth.default.token
-    cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-  }
+provider kubernetes {
+  load_config_file       = false
+  host                   = module.eks.cluster_endpoint
+  token                  = data.aws_eks_cluster_auth.default.token
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
 }
 
-module helm {
-  source = "../modules/helm3"
-}
+# provider "helm" {
+#   version = "~> 1.2"
+#   kubernetes {
+#     load_config_file       = false
+#     host                   = module.eks.cluster_endpoint
+#     token                  = data.aws_eks_cluster_auth.default.token
+#     cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+#   }
+# }
+
+# module helm {
+#   source = "../modules/helm3"
+# }

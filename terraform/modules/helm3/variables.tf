@@ -7,7 +7,7 @@ variable chart {
 }
 
 variable agones_version {
-  default = "1.4.0"
+  default = ""
 }
 
 variable namespace {
@@ -28,11 +28,11 @@ variable sets {
     "agones.image.sdk.alwaysPull"        = "false"
     "agones.image.controller.pullSecret" = ""
     "agones.ping.http.serviceType"       = "LoadBalancer"
-    "agones.ping.udp.expose"             = "true"
+    "agones.ping.udp.expose"             = "false"
     "agones.ping.udp.serviceType"        = "LoadBalancer"
     "agones.controller.logLevel"         = "info"
     "agones.featureGates"                = ""
-    "gameservers.namespaces"             = "default"
+    "gameservers.namespaces"             = "{default}"
     "gameservers.minPort"                = "7000"
     "gameservers.maxPort"                = "8000"
   }
