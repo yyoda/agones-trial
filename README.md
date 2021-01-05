@@ -1,10 +1,14 @@
 Building agones environment on EKS by terraform.
 
 ## Preparation (macOS)
-1. `brew install kubectl aws-iam-authenticator helm`
-2. install agones
+1. Install local utilities
     ```bash
-    helm upgrade agones-release \
+    brew install kubectl aws-iam-authenticator helm`
+    ```
+
+2. Install Agones to k8s from Helm
+    ```bash
+    helm install agones \
         --namespace agones-system \
         --set "agones.ping.udp.expose=false" \
         agones/agones
