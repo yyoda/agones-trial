@@ -91,6 +91,8 @@ provider kubernetes {
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
 }
 
+# didn't work, so setup manually it.
+# issue: https://github.com/googleforgames/agones/issues/1839
 # provider "helm" {
 #   version = "~> 1.2"
 #   kubernetes {
