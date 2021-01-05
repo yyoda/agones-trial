@@ -1,3 +1,7 @@
 node_modules/
 lib/
 plugins/
+src-gen/
+gen-webpack.config.js
+webpack.config.js
+yarn.lock
