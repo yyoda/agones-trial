@@ -8,8 +8,11 @@ Building agones environment on EKS by terraform.
 
 2. Install Agones to k8s from Helm
     ```bash
-    helm install agones \
-        --namespace agones-system \
-        --set "agones.ping.udp.expose=false" \
-        agones/agones
+    kubectl create namespace agones-system
+    helm install agones --namespace agones-system --set "agones.ping.udp.expose=false" agones/agones
+    ```
+
+3. Create server
+    ```bash
+    kubectl create -f https://raw.githubusercontent.com/googleforgames/agones/release-1.11.0/examples/simple-tcp/gameserver.yaml
     ```
