@@ -49,9 +49,9 @@ module eks {
     {
       name                          = "default"
       instance_type                 = "t2.micro"
-      asg_desired_capacity          = 2
-      asg_min_size                  = 2
-      asg_max_size                  = 2
+      asg_desired_capacity          = 6
+      asg_min_size                  = 6
+      asg_max_size                  = 6
       additional_security_group_ids = [module.network.security_groups.eks.worker_group_mgmt_one.id]
       public_ip                     = true
     },
@@ -69,6 +69,14 @@ module eks {
       kubelet_extra_args   = "--node-labels=agones.dev/agones-metrics=true --register-with-taints=agones.dev/agones-metrics=true:NoExecute"
       public_ip            = true
     }
+  ]
+
+  cluster_enabled_log_types = [
+    "api",
+    "audit",
+    "authenticator",
+    "controllerManager",
+    "scheduler",
   ]
 }
 
